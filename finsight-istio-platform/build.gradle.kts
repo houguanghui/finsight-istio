@@ -1,7 +1,7 @@
+
 plugins {
     `java-platform`
     `maven-publish`
-    `version-catalog`
 }
 
 group = "org.finsight.istio.platform"
@@ -13,16 +13,8 @@ javaPlatform {
 }
 
 dependencies {
-    api(platform("com.fasterxml.jackson:jackson-bom:2.9.8"))
+    api(platform(libs.spring.boot.dependencies))
     constraints {
-        api("commons-httpclient:commons-httpclient:3.1")
-        runtime("org.postgresql:postgresql:42.2.5")
-    }
-}
-
-catalog {
-    versionCatalog {
-        library("my-lib", "com.mycompany:mylib:1.2")
     }
 }
 
@@ -45,14 +37,11 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:git://example.com/my-library.git"
+                    connection = "scm:git:git://git@github.com:houguanghui/finsight-istio.git"
                     developerConnection = "scm:git:ssh://git@github.com:houguanghui/finsight-istio.git"
                     url = "https://houguanghui.github.io/"
                 }
             }
-        }
-        create<MavenPublication>("maven") {
-            from(components["versionCatalog"])
         }
     }
 }
