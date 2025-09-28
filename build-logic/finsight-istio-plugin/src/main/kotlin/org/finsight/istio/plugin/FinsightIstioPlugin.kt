@@ -15,9 +15,8 @@ class FinsightIstioPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         print("hello FinsightIstioPlugin")
         // 创建扩展配置
-        project.extensions
         val extension = project.extensions.create("finsightIstioPlugin", FinsightExtension::class.java)
-
+        println("FinsightIstioPlugin:project: ${project.name}")
         // 配置所有子项目
         project.childProjects.forEach { (_, subproject) ->
             subproject.pluginManager.withPlugin("org.springframework.boot") {

@@ -13,7 +13,7 @@ import java.util.Optional
  * @since 2025/9/27
  * @email houguanghui@mail.com
  */
-class DockerExtension: JibGradlePluginExtension<Void> {
+open class DockerExtension: JibGradlePluginExtension<Void> {
     override fun getExtraConfigType(): Optional<Class<Void>> {
         return Optional.empty<Class<Void>>()
     }

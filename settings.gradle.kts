@@ -1,10 +1,10 @@
 rootProject.name = "finsight-istio"
 
-
-include("finsight-istio-catalog", "finsight-istio-platform", "finsight-istio-api", "finsight-istio-common", "finsight-istio-rest-fundamental")
+includeBuild("build-logic")
+include("finsight-istio-catalog", "finsight-istio-platform", "finsight-istio-api", "finsight-istio-common", "finsight-istio-fundamental")
 
 pluginManagement {
-    includeBuild("finsight-istio-plugin")
+
     repositories {
         mavenLocal()
         maven(url = "https://maven.aliyun.com/repository/gradle-plugin")
@@ -23,6 +23,7 @@ dependencyResolutionManagement {
         maven(url = "https://repo.huaweicloud.com/repository/maven/")
         maven(url = "https://mirrors.cloud.tencent.com/nexus/repository/maven-public/")
         maven(url = "https://mirrors.163.com/maven/repository/maven-public/")
+        maven(url = "https://plugins.gradle.org/m2/")
         mavenCentral()
     }
 }
