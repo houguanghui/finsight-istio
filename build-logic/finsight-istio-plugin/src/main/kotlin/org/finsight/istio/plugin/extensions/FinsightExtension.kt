@@ -8,7 +8,7 @@ package org.finsight.istio.plugin.extensions
  */
 open class FinsightExtension {
     var version: String? = null
-    var dockerRegistry: String = "houguanghui"
+    var dockerRegistry: String = "localhost:5000"
     var baseImage: String? = null
     var jvmArgs: List<String>? = null
 }

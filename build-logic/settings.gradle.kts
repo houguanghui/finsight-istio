@@ -1,8 +1,3 @@
-rootProject.name = "finsight-istio"
-
-
-include("finsight-istio-catalog", "finsight-istio-platform", "finsight-istio-api", "finsight-istio-common", "finsight-istio-rest-fundamental")
-
 pluginManagement {
     includeBuild("finsight-istio-plugin")
     repositories {
