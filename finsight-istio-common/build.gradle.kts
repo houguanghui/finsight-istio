@@ -15,6 +15,9 @@ description = "finsight-istio-common"
 dependencies {
     compileOnly(platform(project(":finsight-istio-platform")))
     compileOnly(project(":finsight-istio-api"))
+
+    compileOnly("io.grpc:grpc-stub:1.75.0")
+
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
     compileOnly("org.projectlombok:lombok")

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -44,7 +45,7 @@ public class CashFlow {
     private String reportDateName;
 
     @Column(name = "currency", length = 10)
-    private String currency = "CNY";
+    private final String currency = "CNY";
 
     @Column(name = "notice_date")
     private LocalDateTime noticeDate;
@@ -248,7 +249,7 @@ public class CashFlow {
         if (netcashOperate == null || netprofit == null || netprofit.compareTo(BigDecimal.ZERO) == 0) {
             return null;
         }
-        return netcashOperate.divide(netprofit, 4, BigDecimal.ROUND_HALF_UP);
+        return netcashOperate.divide(netprofit, 4, RoundingMode.HALF_UP);  // 使用 RoundingMode
     }
 
     // 业务方法 - 计算现金再投资比率
@@ -257,7 +258,7 @@ public class CashFlow {
             return null;
         }
         return netcashOperate.subtract(constructLongAsset)
-                .divide(netcashOperate, 4, BigDecimal.ROUND_HALF_UP);
+                .divide(netcashOperate, 4, RoundingMode.HALF_UP);  // 使用 RoundingMode
     }
 
     // 业务方法 - 检查数据完整性

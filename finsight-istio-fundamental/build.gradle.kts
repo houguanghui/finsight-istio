@@ -1,3 +1,4 @@
+
 plugins {
     java
     alias(libs.plugins.spring.boot)
@@ -21,12 +22,19 @@ springBoot {
 
 dependencies {
     compileOnly(platform(project(":finsight-istio-platform")))
-    implementation(project(":finsight-istio-common"))
     implementation(project(":finsight-istio-api"))
+    implementation(project(":finsight-istio-common"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+
+    runtimeOnly("io.grpc:grpc-netty-shaded:1.75.0")
+    implementation("io.grpc:grpc-protobuf:1.75.0")
+    implementation("io.grpc:grpc-stub:1.75.0")
+    implementation("com.google.protobuf:protobuf-java-util:3.25.8")
+    implementation("io.grpc:grpc-services:1.75.0")
 
     runtimeOnly("org.postgresql:postgresql")
 
@@ -40,5 +48,11 @@ dependencies {
 }
 
 tasks.withType<Test> {
+//    Agent 指定
+    classpath.find { it.name.contains("byte-buddy-agent") }?.let {
+        jvmArgs = listOf(
+            "-javaagent:${it.absolutePath}" // 静态添加 ByteBuddy Agent
+        )
+    }
     useJUnitPlatform()
 }
