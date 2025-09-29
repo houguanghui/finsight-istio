@@ -1,10 +1,7 @@
-
 plugins {
     `java-gradle-plugin`
-    kotlin("jvm") version "2.1.21"
+    `kotlin-dsl`
     `maven-publish`
-//    `kotlin-dsl`
-    id("com.google.cloud.tools.jib").version("3.4.5") apply false
 }
 group = "org.finsight.istio.plugin"
 version = "0.0.1-SNAPSHOT"
@@ -13,20 +10,33 @@ description = "finsight-istio-plugin"
 dependencies {
 //    implementation("com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:3.4.5")
     implementation("com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:3.4.5")
-    implementation("com.google.cloud.tools:jib-gradle-plugin-extension-api:0.4.0")
+//    compileOnly("com.google.cloud.tools:jib-gradle-plugin-extension-api:0.4.0")
 }
 
+kotlin {
+    jvmToolchain(21)
+}
 
 gradlePlugin {
     plugins {
-        create("finsightIstioPlugin") {
+        register("finsight-istio-plugin") {
             id = "org.finsight.istio.plugin"
-            displayName = "Finsight-istio plugin"
             implementationClass = "org.finsight.istio.plugin.FinsightIstioPlugin"
-            description = "A custom plugin for Finsight Istio microservices"
             version = "0.0.1-SNAPSHOT"
+            displayName = "Finsight-istio plugin"
+            description = "A custom plugin for Finsight Istio microservices"
         }
     }
 }
+
+//publishing {
+//    publications {
+//        create<MavenPublication>("mavenJava") {
+//            from(components["java"])
+//            artifactId = "finsight-istio-plugin"
+//            version = project.version.toString()
+//        }
+//    }
+//}
 
 
