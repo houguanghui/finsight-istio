@@ -27,7 +27,7 @@ public class GreeterConsumer {
         this.blockingStub = GreeterServiceGrpc.newBlockingStub(channel);
     }
 
-    public void greet(String name) {
+    public String greet(String name) {
         logger.info("Will try to greet " + name + " ...");
         HelloRequest request = HelloRequest.newBuilder().setName(name).build();
         HelloReply response;
@@ -36,8 +36,8 @@ public class GreeterConsumer {
 
         } catch (StatusRuntimeException e) {
             logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
-            return;
+            return "RPC failed: " + e.getStatus().getDescription();
         }
-        logger.info("Greeting: " + response.getMessage());
+        return response.getMessage();
     }
 }

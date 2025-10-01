@@ -15,7 +15,7 @@ import org.finsight.istio.fundamental.HelloRequest;
 public class GreetingServiceImpl extends GreeterServiceGrpc.GreeterServiceImplBase {
     @Override
     public void sayHello(HelloRequest req, StreamObserver<HelloReply> responseObserver) {
-        HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
+        HelloReply reply = HelloReply.newBuilder().setMessage("[fundamental-v1] "+"Hello " + req.getName()).build();
         responseObserver.onNext(reply);
         responseObserver.onCompleted();
     }

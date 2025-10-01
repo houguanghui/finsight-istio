@@ -2,12 +2,11 @@ package org.finsight.istio.common.grpc;
 
 import io.grpc.*;
 import lombok.NoArgsConstructor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -17,19 +16,19 @@ import java.util.logging.Logger;
  * @email houguanghui@mail.com
  * @since 2025/9/29
  */
-@NoArgsConstructor
 public class SimpleGrpcServer {
     private static final Logger logger = Logger.getLogger(SimpleGrpcServer.class.getName());
 
-    public SimpleGrpcServer(int port, List<BindableService> bindableServices, Executor executor) {
+    public SimpleGrpcServer(int port, List<BindableService> bindableServices, ThreadPoolTaskExecutor executor) {
         this.port = port;
         this.bindableServices = bindableServices;
+        this.executor = executor;
     }
 
-    private List<BindableService>  bindableServices;
-    private Executor executor;
+    private final List<BindableService>  bindableServices;
+    private final ThreadPoolTaskExecutor executor;
 
-    private int port = 50051;
+    private final int port;
     private Server server;
 
     public void start() throws IOException {
@@ -50,6 +49,9 @@ public class SimpleGrpcServer {
                     server.shutdownNow();
                 }
                 e.printStackTrace(System.err);
+            }
+            finally {
+                executor.shutdown();
             }
             logger.info("*** server shut down");
         }));

@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class GrpcConfig {
 
     @Bean("grpcExecutor")
-    public Executor customExecutor() {
+    public ThreadPoolTaskExecutor grpcExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(50);
@@ -38,7 +38,7 @@ public class GrpcConfig {
     }
 
     @Bean
-    public SimpleGrpcServer server(@Qualifier("grpcExecutor") Executor executor) throws IOException {
+    public SimpleGrpcServer server(@Qualifier("grpcExecutor") ThreadPoolTaskExecutor executor) throws IOException {
         SimpleGrpcServer simpleGrpcServer = new SimpleGrpcServer(50051, List.of(new GreetingServiceImpl()),executor);
         simpleGrpcServer.start();
         return simpleGrpcServer;
@@ -46,7 +46,7 @@ public class GrpcConfig {
 
     @Bean
     public ManagedChannel channel() {
-        return  Grpc.newChannelBuilder("localhost:50051", InsecureChannelCredentials.create())
+        return  Grpc.newChannelBuilder("fundamental:50051", InsecureChannelCredentials.create())
                 .build();
     }
 }

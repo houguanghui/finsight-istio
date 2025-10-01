@@ -7,8 +7,9 @@ package org.finsight.istio.plugin.extensions
  * @email houguanghui@mail.com
  */
 open class FinsightExtension {
-    var version: String? = null
+    var version: String? = "1.0.0"
     var dockerRegistry: String = "localhost:5000"
+//    var dockerRegistry: String = "registry.cn-hangzhou.aliyuncs.com/houguanghui"
     var baseImage: String? = null
     var jvmArgs: List<String>? = null
 }

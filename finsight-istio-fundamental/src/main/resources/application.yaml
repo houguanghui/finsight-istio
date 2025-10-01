@@ -2,7 +2,7 @@ spring:
   application:
     name: finsight-sca-fundamental
   datasource:
-    url: jdbc:postgresql://localhost:5432/finance_db
+    url: jdbc:postgresql://postgres:5432/finance_db
     username: finance_user
     password: 123456
     driver-class-name: org.postgresql.Driver

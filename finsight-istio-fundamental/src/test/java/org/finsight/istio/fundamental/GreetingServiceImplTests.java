@@ -19,7 +19,7 @@ public class GreetingServiceImplTests {
 
     @Test
     void testSayHello() {
-        greeterConsumer.greet("test");
+        System.out.println(greeterConsumer.greet("test"));
     }
 
 }

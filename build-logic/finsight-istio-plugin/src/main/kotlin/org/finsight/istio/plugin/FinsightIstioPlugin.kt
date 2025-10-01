@@ -35,12 +35,17 @@ class FinsightIstioPlugin : Plugin<Project> {
                 image = "eclipse-temurin:21-jre"
             }
             to {
+//                image = "registry.cn-hangzhou.aliyuncs.com/houguanghui/${project.name}:2.0.0"
                 image = "${extension.dockerRegistry}/${project.name}:${project.version}"
+//                auth {
+//                    username = "15601686256"
+//                }
             }
             container {
                 ports = listOf("8080")
                 jvmFlags = extension.jvmArgs ?: listOf("-Xmx512m")
             }
+            setAllowInsecureRegistries(true)
 //            pluginExtensions {
 //                pluginExtension {
 //                    implementation = "org.finsight.istio.plugin.extensions.DockerExtensionPlugin"
