@@ -42,6 +42,7 @@ class FinsightIstioPlugin : Plugin<Project> {
 //                }
             }
             container {
+                entrypoint = listOf("java", "-Dspring.profiles.active=prod", "-jar", "/app.jar")
                 ports = listOf("8080")
                 jvmFlags = extension.jvmArgs ?: listOf("-Xmx512m")
             }
