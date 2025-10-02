@@ -10,11 +10,60 @@ spec:
   hostnames:
     - "finsight.local"
   rules:
+    # 股票数据路由 - 转发到 stock 服务
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/stock-monthly
+        - path:
+            type: PathPrefix
+            value: /api/stock-daily
+        - path:
+            type: PathPrefix
+            value: /api/stock-minute
+      backendRefs:
+        - name: stock
+          kind: Service
+          port: 8080
+
+    # 统计数据路由 - 转发到 indicator 服务
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/statistics
+      backendRefs:
+        - name: indicator
+          kind: Service
+          port: 8080
+
+    # 财务报表路由 - 转发到 fundamental 服务
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/balance-sheet
+        - path:
+            type: PathPrefix
+            value: /api/cash-flow
+        - path:
+            type: PathPrefix
+            value: /api/company-info
+        - path:
+            type: PathPrefix
+            value: /api/profit-analysis
+        - path:
+            type: PathPrefix
+            value: /grpcHello
+      backendRefs:
+        - name: fundamental
+          kind: Service
+          port: 8080
+
+    # 默认路由（可选）- 转发到 fundamental 或其他默认服务
     - matches:
         - path:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: fundamental
+        - name: frontend
           kind: Service
-          port: 8080
+          port: 3000

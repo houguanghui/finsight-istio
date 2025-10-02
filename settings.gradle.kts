@@ -1,10 +1,17 @@
 rootProject.name = "finsight-istio"
 
 includeBuild("build-logic")
-include("finsight-istio-catalog", "finsight-istio-platform", "finsight-istio-api", "finsight-istio-common", "finsight-istio-fundamental")
+include(
+    "finsight-istio-catalog"
+    , "finsight-istio-platform"
+    , "finsight-istio-api"
+    , "finsight-istio-common"
+    , "finsight-istio-fundamental"
+    , "finsight-istio-indicator"
+    , "finsight-istio-stock"
+)
 
 pluginManagement {
-
     repositories {
         mavenLocal()
         maven(url = "https://maven.aliyun.com/repository/gradle-plugin")

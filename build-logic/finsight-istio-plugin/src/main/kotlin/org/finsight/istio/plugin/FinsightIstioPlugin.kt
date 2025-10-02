@@ -13,9 +13,9 @@ import org.gradle.api.Project
  */
 class FinsightIstioPlugin : Plugin<Project> {
     override fun apply(project: Project) {
+        val extension = project.extensions.create("finsightIstioPlugin", FinsightExtension::class.java)
         project.childProjects.forEach { (_, subproject) ->
             subproject.pluginManager.withPlugin("org.springframework.boot") {
-                val extension = project.extensions.create("finsightIstioPlugin", FinsightExtension::class.java)
                 configureSubproject(subproject, extension)
             }
         }
@@ -35,16 +35,19 @@ class FinsightIstioPlugin : Plugin<Project> {
                 image = "eclipse-temurin:21-jre"
             }
             to {
-//                image = "registry.cn-hangzhou.aliyuncs.com/houguanghui/${project.name}:2.0.0"
+//                image = "registry.cn-hangzhou.aliyuncs.com/houguanghui/${project.name}:1.0.0"
                 image = "${extension.dockerRegistry}/${project.name}:${project.version}"
-//                auth {
-//                    username = "15601686256"
-//                }
+                auth {
+                    username = "15601686256"
+                }
             }
             container {
-                entrypoint = listOf("java", "-Dspring.profiles.active=prod", "-jar", "/app.jar")
                 ports = listOf("8080")
-                jvmFlags = extension.jvmArgs ?: listOf("-Xmx512m")
+                jvmFlags = listOf(
+                    "-Dspring.profiles.active=prod",
+                    "-Xmx512m",
+                    "-Xms256m"
+                )
             }
             setAllowInsecureRegistries(true)
 //            pluginExtensions {

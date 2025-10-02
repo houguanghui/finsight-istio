@@ -1,0 +1,316 @@
+##################################################################################################
+# postgres service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-timescaledb:latest-pg15
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POSTGRES_DB
+              value: finance_db
+            - name: POSTGRES_USER
+              value: finance_user
+            - name: POSTGRES_PASSWORD
+              value: "123456"
+          ports:
+            - containerPort: 5432
+              name: postgres
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+##################################################################################################
+# fundamental service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: fundamental
+  labels:
+    app: fundamental
+    service: fundamental
+  annotations:
+    traffic.istio.io/nodeSelector: '{"beta.kubernetes.io/os":"linux"}'
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+    - port: 50051           # gRPC 服务端口
+      targetPort: 50051     # 容器内 gRPC 端口
+      name: grpc
+      protocol: TCP
+  selector:
+    app: fundamental
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: finsight-fundamental
+  labels:
+    account: fundamental
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundamental-v1
+  labels:
+    app: fundamental
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fundamental
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: fundamental
+        version: v1
+    spec:
+      serviceAccountName: finsight-fundamental
+      containers:
+        - name: fundamental
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-istio-fundamental:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080  # HTTP 端口
+              name: http
+            - containerPort: 50051  # gRPC 端口
+              name: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fundamental-v2
+  labels:
+    app: fundamental
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fundamental
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: fundamental
+        version: v2
+    spec:
+      serviceAccountName: finsight-fundamental
+      containers:
+        - name: fundamental
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-istio-fundamental:2.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080  # HTTP 端口
+              name: http
+            - containerPort: 50051  # gRPC 端口
+              name: grpc
+---
+##################################################################################################
+# indicator service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: indicator
+  labels:
+    app: indicator
+    service: indicator
+  annotations:
+    traffic.istio.io/nodeSelector: '{"beta.kubernetes.io/os":"linux"}'
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: indicator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: finsight-indicator
+  labels:
+    account: indicator
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: indicator-v1
+  labels:
+    app: indicator
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: indicator
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: indicator
+        version: v1
+    spec:
+      serviceAccountName: finsight-indicator
+      containers:
+        - name: indicator
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-istio-indicator:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080  # HTTP 端口
+              name: http
+---
+##################################################################################################
+# stock service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: stock
+  labels:
+    app: stock
+    service: stock
+  annotations:
+    traffic.istio.io/nodeSelector: '{"beta.kubernetes.io/os":"linux"}'
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: stock
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: finsight-stock
+  labels:
+    account: stock
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-v1
+  labels:
+    app: stock
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stock
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: stock
+        version: v1
+    spec:
+      serviceAccountName: finsight-stock
+      containers:
+        - name: indicator
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-istio-stock:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080  # HTTP 端口
+              name: http
+---
+##################################################################################################
+# frontend service
+##################################################################################################
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+    service: frontend
+  annotations:
+    traffic.istio.io/nodeSelector: '{"beta.kubernetes.io/os":"linux"}'
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      name: http
+  selector:
+    app: frontend
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: finsight-frontend
+  labels:
+    account: stock
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-v1
+  labels:
+    app: frontend
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: v1
+    spec:
+      serviceAccountName: finsight-frontend
+      containers:
+        - name: frontend
+          image: registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-remix:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000  # HTTP 端口
+              name: http
+---

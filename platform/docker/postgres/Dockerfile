@@ -4,5 +4,5 @@ FROM timescale/timescaledb:latest-pg15
 COPY ../init-database.sql /docker-entrypoint-initdb.d/
 
 # 设置权限
-RUN chmod 644 /docker-entrypoint-initdb.d/init-database.sql
+RUN chmod 644 /docker-entrypoint-initdb.d/finance_data_only.dump
 

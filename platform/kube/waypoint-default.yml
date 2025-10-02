@@ -1,9 +1,0 @@
-apiVersion: gateway.istio.io/v1beta1
-kind: Waypoint
-metadata:
-  name: default-waypoint
-  namespace: default
-spec:
-  for:
-    kind: Service
-    name: fundamental

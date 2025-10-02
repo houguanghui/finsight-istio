@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: finsight-istio-indicator
+  profiles:
+    active: dev
