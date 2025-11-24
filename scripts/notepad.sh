@@ -1,4 +1,10 @@
 # ./gradlew jib  打包docker image and push
+#kind get clusters
+#kind get nodes --name tutorial-cluster
+#kubectl config get-contexts
+#kubectl config use-context kind-istio-testing
+#kubectl get nodes
+#kind create cluster --config kind-cluster.yaml
 #kubectl apply -f postgres-init-configmap.yaml
 #docker build -t registry.cn-hangzhou.aliyuncs.com/houguanghui/finsight-timescaledb:latest-pg15 .
 # kubectl apply -f istio-finsight-services.yaml
